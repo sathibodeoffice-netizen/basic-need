@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -11,8 +11,19 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('basicNeedEmail');
+    const savedPassword = localStorage.getItem('basicNeedPassword');
+    if (savedEmail && savedPassword) {
+      setEmail(savedEmail);
+      setPassword(savedPassword);
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +41,13 @@ export default function LoginPage() {
     if (res?.error) {
       setError(res.error);
     } else {
+      if (rememberMe) {
+        localStorage.setItem('basicNeedEmail', email);
+        localStorage.setItem('basicNeedPassword', password);
+      } else {
+        localStorage.removeItem('basicNeedEmail');
+        localStorage.removeItem('basicNeedPassword');
+      }
       router.push('/');
       router.refresh();
     }
@@ -70,6 +88,22 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-text-light cursor-pointer">
+                Remember me
+              </label>
+            </div>
           </div>
 
           <div>
