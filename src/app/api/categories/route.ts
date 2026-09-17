@@ -7,7 +7,22 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 export async function GET() {
   try {
     await connectToDatabase();
-    const categories = await Category.find({}).sort({ createdAt: -1 });
+    let categories = await Category.find({}).sort({ createdAt: -1 });
+    
+    // Auto-seed default categories if empty
+    if (categories.length === 0) {
+      const defaultCategories = [
+        { name: 'Grocery', slug: 'grocery' },
+        { name: 'Fresh Food', slug: 'fresh-food' },
+        { name: 'Personal Care', slug: 'personal-care' },
+        { name: 'Home & Cleaning', slug: 'home-cleaning' },
+        { name: 'Baby Care', slug: 'baby-care' },
+        { name: 'Emergency', slug: 'emergency' }
+      ];
+      await Category.insertMany(defaultCategories);
+      categories = await Category.find({}).sort({ createdAt: -1 });
+    }
+
     return NextResponse.json(categories);
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
