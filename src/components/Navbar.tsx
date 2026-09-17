@@ -50,12 +50,19 @@ export default function Navbar() {
               <img 
                 src="/logo_transparent.png" 
                 alt="Basic Need Logo" 
-                className="h-12 w-auto object-contain transition-all duration-300 dark:drop-shadow-[0_0_6px_rgba(255,255,255,0.8)]"
+                className="h-12 w-auto object-contain dark:hidden"
                 onError={(e) => {
-                  // Fallback if logo.png doesn't exist yet
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
-                  target.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              <img 
+                src="/logo_transparent_dark.png" 
+                alt="Basic Need Logo" 
+                className="h-12 w-auto object-contain hidden dark:block"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
                 }}
               />
               <span className="hidden text-2xl font-bold text-primary">
