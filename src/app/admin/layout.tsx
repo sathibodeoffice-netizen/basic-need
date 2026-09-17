@@ -3,13 +3,13 @@ import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { redirect } from 'next/navigation';
-import { LayoutDashboard, ShoppingBag, Tags, Users, Settings } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Tags, Users, Settings, Home } from 'lucide-react';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
 
   if (!session || session.user.role !== 'ADMIN') {
-    redirect('/');
+    redirect('/login');
   }
 
   const navigation = [
@@ -19,6 +19,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { name: 'Orders', href: '/admin/orders', icon: ShoppingBag },
     { name: 'Users & Admins', href: '/admin/users', icon: Users },
     { name: 'Settings', href: '/admin/settings', icon: Settings },
+    { name: 'Back to Website', href: '/', icon: Home },
   ];
 
   return (
