@@ -69,7 +69,7 @@ export default function HomePage() {
               <h2 className="text-2xl md:text-3xl font-bold text-text-main">Shop by Category</h2>
               <p className="text-text-light mt-2">Find what you need from our top categories.</p>
             </div>
-            <Link href="/categories" className="hidden sm:block text-primary font-medium hover:underline">
+            <Link href="/shop" className="hidden sm:block text-primary font-medium hover:underline">
               View All
             </Link>
           </div>
