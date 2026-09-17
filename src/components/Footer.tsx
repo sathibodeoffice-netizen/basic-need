@@ -1,7 +1,22 @@
 import React from 'react';
 import Link from 'next/link';
+import connectToDatabase from '@/lib/db';
+import Settings from '@/models/Setting';
 
-export default function Footer() {
+export default async function Footer() {
+  let settings = null;
+  try {
+    await connectToDatabase();
+    settings = await Settings.findOne();
+  } catch (error) {
+    console.error('Failed to fetch settings for footer:', error);
+  }
+
+  const contactEmail = settings?.contactEmail || 'support@basicneed.com';
+  const contactPhone = settings?.contactPhone || '+880 1234 567890';
+  const contactAddress = settings?.contactAddress || 'Dhaka, Bangladesh';
+  const aboutText = settings?.aboutText || 'Your Everyday Essentials, Anytime. \nআপনার প্রতিদিনের প্রয়োজন, এখন এক জায়গায়।';
+
   return (
     <footer className="bg-surface border-t border-border mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -9,9 +24,8 @@ export default function Footer() {
           
           <div className="col-span-1 md:col-span-1">
             <h3 className="text-xl font-bold text-primary mb-4">Basic Need</h3>
-            <p className="text-text-light text-sm mb-4">
-              Your Everyday Essentials, Anytime. <br/>
-              আপনার প্রতিদিনের প্রয়োজন, এখন এক জায়গায়।
+            <p className="text-text-light text-sm mb-4 whitespace-pre-line">
+              {aboutText}
             </p>
           </div>
           
@@ -38,9 +52,9 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-text-main mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-text-light">
-              <li>support@basicneed.com</li>
-              <li>+880 1234 567890</li>
-              <li>Dhaka, Bangladesh</li>
+              <li>{contactEmail}</li>
+              <li>{contactPhone}</li>
+              <li>{contactAddress}</li>
             </ul>
           </div>
         </div>
