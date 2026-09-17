@@ -46,9 +46,21 @@ export default function Navbar() {
           
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="text-2xl font-bold text-primary flex items-center gap-2">
-              <ShoppingBagIcon className="w-8 h-8" />
-              <span>Basic <span className="text-text-main">Need</span></span>
+            <Link href="/" className="flex items-center gap-2">
+              <img 
+                src="/logo.png" 
+                alt="Basic Need Logo" 
+                className="h-12 w-auto object-contain"
+                onError={(e) => {
+                  // Fallback if logo.png doesn't exist yet
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  target.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              <span className="hidden text-2xl font-bold text-primary">
+                Basic <span className="text-text-main">Need</span>
+              </span>
             </Link>
           </div>
 
