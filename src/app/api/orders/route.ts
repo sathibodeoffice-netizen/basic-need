@@ -18,6 +18,7 @@ export async function POST(req: Request) {
       itemsPrice,
       shippingPrice,
       totalPrice,
+      trxId,
     } = await req.json();
 
     if (orderItems && orderItems.length === 0) {
@@ -26,8 +27,8 @@ export async function POST(req: Request) {
 
     await connectToDatabase();
     
-    // Simulate payment validation for Bank/bKash mock
-    const isPaid = paymentMethod !== 'Cash on Delivery';
+    // Manual payment validation
+    const isPaid = false; // Manual payments need admin verification
     
     const order = new Order({
       orderItems,
@@ -38,7 +39,7 @@ export async function POST(req: Request) {
       shippingPrice,
       totalPrice,
       isPaid,
-      paidAt: isPaid ? Date.now() : undefined,
+      paymentResult: trxId ? { id: trxId, status: 'Pending Verification' } : undefined,
     });
 
     const createdOrder = await order.save();

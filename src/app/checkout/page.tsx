@@ -23,6 +23,7 @@ export default function CheckoutPage() {
   const [area, setArea] = useState('');
   const [city, setCity] = useState('Dhaka');
   const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
+  const [trxId, setTrxId] = useState('');
 
   useEffect(() => {
     setMounted(true);
@@ -36,7 +37,7 @@ export default function CheckoutPage() {
   }
 
   const itemsPrice = getTotalPrice();
-  const shippingPrice = itemsPrice > 0 ? 60 : 0;
+  const shippingPrice = itemsPrice > 0 ? (city === 'Dhaka' ? 60 : 100) : 0;
   const totalPrice = itemsPrice + shippingPrice;
 
   const handleCheckout = async (e: React.FormEvent) => {
@@ -59,6 +60,7 @@ export default function CheckoutPage() {
         })),
         shippingAddress: { fullName, phone, address, area, city },
         paymentMethod,
+        trxId: paymentMethod === 'bKash' ? trxId : undefined,
         itemsPrice,
         shippingPrice,
         totalPrice,
@@ -142,24 +144,28 @@ export default function CheckoutPage() {
                     <input 
                       type="radio" 
                       name="paymentMethod" 
-                      value="bKash (Mock)"
-                      checked={paymentMethod === 'bKash (Mock)'}
+                      value="bKash"
+                      checked={paymentMethod === 'bKash'}
                       onChange={e => setPaymentMethod(e.target.value)}
                       className="text-primary focus:ring-primary w-4 h-4"
                     />
-                    <span className="font-medium text-text-main">bKash (Mock)</span>
+                    <span className="font-medium text-text-main">bKash (Manual)</span>
                   </label>
-                  <label className="flex items-center gap-3 p-3 border border-border rounded-md cursor-pointer hover:bg-gray-50">
-                    <input 
-                      type="radio" 
-                      name="paymentMethod" 
-                      value="Bank Card (Mock)"
-                      checked={paymentMethod === 'Bank Card (Mock)'}
-                      onChange={e => setPaymentMethod(e.target.value)}
-                      className="text-primary focus:ring-primary w-4 h-4"
-                    />
-                    <span className="font-medium text-text-main">Bank Card (Mock)</span>
-                  </label>
+                  
+                  {paymentMethod === 'bKash' && (
+                    <div className="ml-7 p-4 bg-gray-50 rounded-md border border-gray-200">
+                      <p className="text-sm text-text-main mb-3">
+                        Please send <strong className="text-primary text-lg">৳{totalPrice}</strong> to our bKash Personal Number: <strong className="font-bold text-lg">017XXXXXXXX</strong> (Demo)
+                      </p>
+                      <Input 
+                        label="Enter your bKash TrxID" 
+                        required 
+                        value={trxId} 
+                        onChange={e => setTrxId(e.target.value)} 
+                        placeholder="e.g. 8N52A8XXXX"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
