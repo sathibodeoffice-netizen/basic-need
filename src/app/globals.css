@@ -18,18 +18,14 @@
   --foreground: #333333;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #111827;
-    --foreground: #f9fafb;
-  }
-  @theme inline {
-    --color-background: #111827;
-    --color-surface: #1f2937;
-    --color-border: #374151;
-    --color-text-main: #f9fafb;
-    --color-text-light: #9ca3af;
-  }
+.dark {
+  --background: #111827;
+  --foreground: #f9fafb;
+  --color-background: #111827;
+  --color-surface: #1f2937;
+  --color-border: #374151;
+  --color-text-main: #f9fafb;
+  --color-text-light: #9ca3af;
 }
 
 body {

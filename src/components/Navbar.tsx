@@ -1,13 +1,38 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, Heart, User, Search, Menu } from 'lucide-react';
+import { ShoppingCart, Heart, User, Search, Menu, Moon, Sun } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Input from './ui/Input';
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const [theme, setTheme] = useState('light');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    setTheme(savedTheme);
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    if (theme === 'light') {
+      setTheme('dark');
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      setTheme('light');
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
   return (
     <header className="bg-surface border-b border-border sticky top-0 z-50">
@@ -41,6 +66,18 @@ export default function Navbar() {
 
           {/* Actions */}
           <div className="flex items-center space-x-6">
+            
+            {/* Theme Toggle */}
+            {mounted && (
+              <button 
+                onClick={toggleTheme} 
+                className="text-text-light hover:text-primary transition-colors focus:outline-none"
+                aria-label="Toggle Dark Mode"
+              >
+                {theme === 'dark' ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+              </button>
+            )}
+
             <Link href="/wishlist" className="text-text-light hover:text-primary hidden sm:block">
               <Heart className="w-6 h-6" />
             </Link>
