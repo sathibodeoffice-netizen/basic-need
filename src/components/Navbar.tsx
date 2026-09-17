@@ -50,7 +50,7 @@ export default function Navbar() {
               <img 
                 src="/logo.png" 
                 alt="Basic Need Logo" 
-                className="h-12 w-auto object-contain mix-blend-multiply dark:invert dark:hue-rotate-180 dark:mix-blend-screen"
+                className="h-12 w-auto object-contain dark:bg-white dark:px-2 dark:py-1 dark:rounded-lg"
                 onError={(e) => {
                   // Fallback if logo.png doesn't exist yet
                   const target = e.target as HTMLImageElement;
