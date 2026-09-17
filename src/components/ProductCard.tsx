@@ -1,6 +1,9 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Button from './ui/Button';
+import { useCartStore } from '@/store/useCartStore';
 
 interface ProductCardProps {
   product: {
@@ -15,6 +18,20 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = product.discountPrice && product.discountPrice < product.price;
+  const addItem = useCartStore((state) => state.addItem);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigating if clicking add inside a Link (though it's not inside Link here)
+    addItem({
+      _id: product._id,
+      name: product.name,
+      price: product.price,
+      discountPrice: product.discountPrice,
+      image: product.image || '',
+      quantity: 1,
+    });
+    // Optional: show a quick toast or alert, but the cart number updates automatically.
+  };
 
   return (
     <div className="bg-surface border border-border rounded-xl overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full group">
@@ -48,7 +65,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               <span className="text-lg font-bold text-text-main">৳{product.price}</span>
             )}
           </div>
-          <Button size="sm" className="px-3">Add</Button>
+          <Button size="sm" className="px-3" onClick={handleAddToCart}>Add</Button>
         </div>
       </div>
     </div>
