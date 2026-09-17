@@ -48,9 +48,9 @@ export default function Navbar() {
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center gap-2">
               <img 
-                src="/logo.png" 
+                src="/logo_transparent.png" 
                 alt="Basic Need Logo" 
-                className="h-12 w-auto object-contain"
+                className="h-12 w-auto object-contain transition-all duration-300 dark:drop-shadow-[0_0_6px_rgba(255,255,255,0.8)]"
                 onError={(e) => {
                   // Fallback if logo.png doesn't exist yet
                   const target = e.target as HTMLImageElement;
