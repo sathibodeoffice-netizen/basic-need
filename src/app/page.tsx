@@ -34,30 +34,30 @@ export default function HomePage() {
         <section className="py-16 border-b border-border">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
+              <Link href="/shop" className="flex flex-col items-center text-center group cursor-pointer">
+                <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 </div>
-                <h3 className="font-semibold text-text-main">24/7 Ordering</h3>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
+                <h3 className="font-semibold text-text-main group-hover:text-primary transition-colors">24/7 Ordering</h3>
+              </Link>
+              <Link href="/shop" className="flex flex-col items-center text-center group cursor-pointer">
+                <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
                 </div>
-                <h3 className="font-semibold text-text-main">Quality Products</h3>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
+                <h3 className="font-semibold text-text-main group-hover:text-primary transition-colors">Quality Products</h3>
+              </Link>
+              <Link href="/shop" className="flex flex-col items-center text-center group cursor-pointer">
+                <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 </div>
-                <h3 className="font-semibold text-text-main">Secure Checkout</h3>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
+                <h3 className="font-semibold text-text-main group-hover:text-primary transition-colors">Secure Checkout</h3>
+              </Link>
+              <Link href="/shop" className="flex flex-col items-center text-center group cursor-pointer">
+                <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-sm">
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                 </div>
-                <h3 className="font-semibold text-text-main">Fast Delivery</h3>
-              </div>
+                <h3 className="font-semibold text-text-main group-hover:text-primary transition-colors">Fast Delivery</h3>
+              </Link>
             </div>
           </div>
         </section>
