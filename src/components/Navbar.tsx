@@ -50,7 +50,7 @@ export default function Navbar() {
               <img 
                 src="/logo.png" 
                 alt="Basic Need Logo" 
-                className="h-12 w-auto object-contain"
+                className="h-12 w-auto object-contain mix-blend-multiply dark:invert dark:hue-rotate-180 dark:mix-blend-screen"
                 onError={(e) => {
                   // Fallback if logo.png doesn't exist yet
                   const target = e.target as HTMLImageElement;
@@ -69,7 +69,7 @@ export default function Navbar() {
             <input
               type="text"
               placeholder="Search for groceries, essentials..."
-              className="w-full h-10 pl-4 pr-10 rounded-full border border-border bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full h-10 pl-4 pr-10 rounded-full border border-border bg-background text-text-main focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder-text-light"
             />
             <button className="absolute right-3 top-2.5 text-text-light hover:text-primary">
               <Search className="w-5 h-5" />
