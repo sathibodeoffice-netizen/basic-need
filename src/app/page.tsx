@@ -23,7 +23,7 @@ export default function HomePage() {
               <Link href="/shop">
                 <Button size="lg" className="px-8">Shop Now</Button>
               </Link>
-              <Link href="/categories">
+              <Link href="#categories">
                 <Button variant="outline" size="lg" className="px-8">Explore Categories</Button>
               </Link>
             </div>
@@ -63,7 +63,7 @@ export default function HomePage() {
         </section>
 
         {/* Featured Categories (Mock) */}
-        <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="categories" className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-8">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-text-main">Shop by Category</h2>
