@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { redirect } from 'next/navigation';
 import { LayoutDashboard, ShoppingBag, Tags, Users, Settings, Home } from 'lucide-react';
+import AdminLogoutButton from '@/components/AdminLogoutButton';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
@@ -41,6 +42,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </Link>
           ))}
         </nav>
+        <AdminLogoutButton />
       </div>
 
       {/* Main Content */}
