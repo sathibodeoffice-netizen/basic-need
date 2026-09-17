@@ -6,7 +6,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -15,13 +15,15 @@ export async function PATCH(
     }
 
     const { role } = await request.json();
+    const resolvedParams = await params;
+    const userId = resolvedParams.id;
 
     if (!role || !['CUSTOMER', 'ADMIN'].includes(role)) {
       return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
     }
 
     // Prevent changing your own role to avoid locking yourself out
-    if (params.id === session.user.id && role !== 'ADMIN') {
+    if (userId === session.user.id && role !== 'ADMIN') {
       return NextResponse.json(
         { error: 'Cannot remove your own admin rights directly' },
         { status: 400 }
@@ -31,7 +33,7 @@ export async function PATCH(
     await connectToDatabase();
     
     const user = await User.findByIdAndUpdate(
-      params.id,
+      userId,
       { role },
       { new: true }
     ).select('-password');
