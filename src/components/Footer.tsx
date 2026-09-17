@@ -1,16 +1,17 @@
-import React from 'react';
-import Link from 'next/link';
-import connectToDatabase from '@/lib/db';
-import Settings from '@/models/Setting';
+'use client';
 
-export default async function Footer() {
-  let settings = null;
-  try {
-    await connectToDatabase();
-    settings = await Settings.findOne();
-  } catch (error) {
-    console.error('Failed to fetch settings for footer:', error);
-  }
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+
+export default function Footer() {
+  const [settings, setSettings] = useState<any>(null);
+
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then((res) => res.json())
+      .then((data) => setSettings(data))
+      .catch((err) => console.error('Failed to fetch footer settings:', err));
+  }, []);
 
   const contactEmail = settings?.contactEmail || 'support@basicneed.com';
   const contactPhone = settings?.contactPhone || '+880 1234 567890';
