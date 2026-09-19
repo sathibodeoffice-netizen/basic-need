@@ -47,9 +47,11 @@ export default function ShopPage() {
   };
 
   // Derived state for filtering and sorting
-  const filteredProducts = products
+  const safeProducts = Array.isArray(products) ? products : [];
+  
+  const filteredProducts = safeProducts
     .filter(p => {
-      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = p.name?.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory ? p.category?._id === selectedCategory : true;
       return matchesSearch && matchesCategory;
     })
@@ -110,7 +112,7 @@ export default function ShopPage() {
                     />
                     <span className="text-sm text-text-main">All Categories</span>
                   </label>
-                  {categories.map(cat => (
+                  {(Array.isArray(categories) ? categories : []).map(cat => (
                     <label key={cat._id} className="flex items-center gap-2 cursor-pointer">
                       <input 
                         type="radio" 
