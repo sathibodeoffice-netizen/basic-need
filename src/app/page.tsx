@@ -83,7 +83,7 @@ export default function HomePage() {
               { name: 'Baby Care', icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> },
               { name: 'Emergency', icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg> }
             ].map((cat, i) => (
-              <Link href="/categories" key={i} className="bg-surface border border-border rounded-xl p-4 text-center group cursor-pointer hover:border-primary hover:shadow-md transition-all">
+              <Link href="/shop" key={i} className="bg-surface border border-border rounded-xl p-4 text-center group cursor-pointer hover:border-primary hover:shadow-md transition-all">
                 <div className="w-16 h-16 mx-auto bg-primary/10 text-primary rounded-full mb-3 flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:scale-110 transition-all duration-300 shadow-sm">
                   {cat.icon}
                 </div>
