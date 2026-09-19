@@ -35,6 +35,8 @@ export default function Navbar() {
     }
   };
 
+  const totalItems = useCartStore(state => (state.items || []).reduce((total, item) => total + item.quantity, 0));
+
   return (
     <header className="bg-surface border-b border-border sticky top-0 z-50">
       {/* Top Notice */}
@@ -106,7 +108,7 @@ export default function Navbar() {
               <ShoppingCart className="w-6 h-6" />
               {mounted && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                  {useCartStore(state => (state.items || []).reduce((total, item) => total + item.quantity, 0))}
+                  {totalItems}
                 </span>
               )}
             </Link>
