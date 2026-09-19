@@ -35,7 +35,10 @@ export default function Navbar() {
     }
   };
 
-  const totalItems = useCartStore(state => (state.items || []).reduce((total, item) => total + item.quantity, 0));
+  const totalItems = useCartStore(state => {
+    const items = Array.isArray(state?.items) ? state.items : [];
+    return items.reduce((total, item) => total + (item?.quantity || 1), 0);
+  });
 
   return (
     <header className="bg-surface border-b border-border sticky top-0 z-50">
