@@ -65,7 +65,7 @@ export default function AdminOrdersPage() {
                 </tr>
               </thead>
               <tbody>
-                {orders.map((order) => (
+                {(Array.isArray(orders) ? orders : []).map((order) => (
                   <tr key={order._id} className="border-b border-border hover:bg-black/5 dark:hover:bg-white/5">
                     <td className="py-3 px-4 text-xs">{order._id}</td>
                     <td className="py-3 px-4">{order.user?.name || order.shippingAddress?.fullName}</td>

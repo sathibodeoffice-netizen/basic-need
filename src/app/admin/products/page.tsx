@@ -148,7 +148,7 @@ export default function ProductsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((product) => (
+                  {(Array.isArray(products) ? products : []).map((product) => (
                     <tr key={product._id} className="border-b border-border hover:bg-black/5 dark:hover:bg-white/5">
                       <td className="py-3 px-4">{product.name}</td>
                       <td className="py-3 px-4">{product.category?.name || '-'}</td>

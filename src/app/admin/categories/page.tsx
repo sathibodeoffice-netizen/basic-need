@@ -115,7 +115,7 @@ export default function CategoriesPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {categories.map((category) => (
+                  {(Array.isArray(categories) ? categories : []).map((category) => (
                     <tr key={category._id} className="border-b border-border hover:bg-black/5 dark:hover:bg-white/5">
                       <td className="py-3 px-4">{category.name}</td>
                       <td className="py-3 px-4">{category.banglaName || '-'}</td>
