@@ -15,7 +15,9 @@ export default function ProductsPage() {
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
+  const [stockQuantity, setStockQuantity] = useState('100');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProducts();
@@ -48,31 +50,64 @@ export default function ProductsPage() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const res = await fetch('/api/products', {
-        method: 'POST',
+      const url = editId ? `/api/products/${editId}` : '/api/products';
+      const method = editId ? 'PUT' : 'POST';
+      
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           name, 
           price: Number(price), 
           category,
           description: description || 'No description provided.',
-          stockQuantity: 100 // Default for now
+          stockQuantity: Number(stockQuantity) || 0
         }),
       });
+
       if (res.ok) {
-        fetchProducts();
         setName('');
         setPrice('');
         setCategory('');
         setDescription('');
+        setStockQuantity('100');
+        setEditId(null);
+        fetchProducts();
       } else {
         const error = await res.json();
         alert(error.message);
       }
     } catch (error) {
-      console.error(error);
+      console.error('Error saving product:', error);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleEdit = (product: any) => {
+    setEditId(product._id);
+    setName(product.name);
+    setPrice(product.price.toString());
+    setCategory(product.category?._id || product.category || '');
+    setDescription(product.description || '');
+    setStockQuantity(product.stockQuantity?.toString() || '100');
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this product?')) return;
+    
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        fetchProducts();
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
     }
   };
 
@@ -85,7 +120,21 @@ export default function ProductsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Create Product Form */}
         <div className="lg:col-span-1 bg-surface p-6 rounded-lg border border-border shadow-sm h-fit">
-          <h2 className="text-lg font-semibold mb-4">Add New Product</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">{editId ? 'Edit Product' : 'Add New Product'}</h2>
+            {editId && (
+              <Button variant="ghost" size="sm" onClick={() => {
+                setEditId(null);
+                setName('');
+                setPrice('');
+                setCategory('');
+                setDescription('');
+                setStockQuantity('100');
+              }}>
+                Cancel Edit
+              </Button>
+            )}
+          </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               label="Name"
@@ -114,6 +163,13 @@ export default function ProductsPage() {
               value={price}
               onChange={(e) => setPrice(e.target.value)}
             />
+            <Input
+              label="Stock Quantity"
+              type="number"
+              required
+              value={stockQuantity}
+              onChange={(e) => setStockQuantity(e.target.value)}
+            />
             <div className="w-full">
               <label className="block text-sm font-medium text-text-main mb-1">Description</label>
               <textarea
@@ -123,7 +179,7 @@ export default function ProductsPage() {
               />
             </div>
             <Button type="submit" className="w-full" isLoading={isSubmitting}>
-              Add Product
+              {editId ? 'Update Product' : 'Add Product'}
             </Button>
           </form>
         </div>
@@ -155,8 +211,22 @@ export default function ProductsPage() {
                       <td className="py-3 px-4">৳{product.price}</td>
                       <td className="py-3 px-4">{product.stockQuantity}</td>
                       <td className="py-3 px-4 text-right">
-                        <Button variant="ghost" size="sm" className="text-primary mr-2">Edit</Button>
-                        <Button variant="ghost" size="sm" className="text-red-500">Delete</Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-primary mr-2"
+                          onClick={() => handleEdit(product)}
+                        >
+                          Edit
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-red-500"
+                          onClick={() => handleDelete(product._id)}
+                        >
+                          Delete
+                        </Button>
                       </td>
                     </tr>
                   ))}
