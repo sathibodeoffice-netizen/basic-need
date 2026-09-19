@@ -2,15 +2,25 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ShoppingCart, Heart, User, Search, Menu, Moon, Sun } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Input from './ui/Input';
 import { useCartStore } from '@/store/useCartStore';
 
 export default function Navbar() {
+  const router = useRouter();
   const { data: session } = useSession();
   const [theme, setTheme] = useState('light');
   const [mounted, setMounted] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/shop?query=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -78,16 +88,18 @@ export default function Navbar() {
           </div>
 
           {/* Search Bar (Desktop) */}
-          <div className="hidden md:flex flex-1 max-w-xl mx-8 relative">
+          <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xl mx-8 relative">
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search for groceries, essentials..."
               className="w-full h-10 pl-4 pr-10 rounded-full border border-border bg-background text-text-main focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder-text-light"
             />
-            <button className="absolute right-3 top-2.5 text-text-light hover:text-primary">
+            <button type="submit" className="absolute right-3 top-2.5 text-text-light hover:text-primary">
               <Search className="w-5 h-5" />
             </button>
-          </div>
+          </form>
 
           {/* Actions */}
           <div className="flex items-center space-x-6">

@@ -21,6 +21,14 @@ export default function ShopPage() {
   useEffect(() => {
     fetchProducts();
     fetchCategories();
+    
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const query = params.get('query');
+      if (query) {
+        setSearchQuery(query);
+      }
+    }
   }, []);
 
   const fetchProducts = async () => {
