@@ -4,7 +4,7 @@ import Product from '@/models/Product';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== 'ADMIN') {
@@ -12,7 +12,8 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     }
 
     await connectDB();
-    await Product.findByIdAndDelete(params.id);
+    const resolvedParams = await params;
+    await Product.findByIdAndDelete(resolvedParams.id);
     
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -20,7 +21,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
   }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== 'ADMIN') {
@@ -29,9 +30,10 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
     await connectDB();
     const body = await req.json();
+    const resolvedParams = await params;
     
     const updatedProduct = await Product.findByIdAndUpdate(
-      params.id,
+      resolvedParams.id,
       body,
       { new: true, runValidators: true }
     );
