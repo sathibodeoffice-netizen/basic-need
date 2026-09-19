@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ShoppingCart, Heart, User, Search, Menu, Moon, Sun } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Input from './ui/Input';
+import { useCartStore } from '@/store/useCartStore';
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -103,9 +104,11 @@ export default function Navbar() {
             
             <Link href="/cart" className="text-text-light hover:text-primary relative">
               <ShoppingCart className="w-6 h-6" />
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                0
-              </span>
+              {mounted && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                  {useCartStore(state => state.getTotalItems())}
+                </span>
+              )}
             </Link>
 
             <div className="relative group">

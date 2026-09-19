@@ -26,37 +26,40 @@ export const useCartStore = create<CartStore>()(
       items: [],
       addItem: (item) => {
         set((state) => {
-          const existingItem = state.items.find((i) => i._id === item._id);
+          const items = state.items || [];
+          const existingItem = items.find((i) => i._id === item._id);
           if (existingItem) {
             return {
-              items: state.items.map((i) =>
+              items: items.map((i) =>
                 i._id === item._id
                   ? { ...i, quantity: i.quantity + item.quantity }
                   : i
               ),
             };
           }
-          return { items: [...state.items, item] };
+          return { items: [...items, item] };
         });
       },
       removeItem: (id) => {
         set((state) => ({
-          items: state.items.filter((i) => i._id !== id),
+          items: (state.items || []).filter((i) => i._id !== id),
         }));
       },
       updateQuantity: (id, quantity) => {
         set((state) => ({
-          items: state.items.map((i) =>
+          items: (state.items || []).map((i) =>
             i._id === id ? { ...i, quantity: Math.max(1, quantity) } : i
           ),
         }));
       },
       clearCart: () => set({ items: [] }),
       getTotalItems: () => {
-        return get().items.reduce((total, item) => total + item.quantity, 0);
+        const items = get().items || [];
+        return items.reduce((total, item) => total + item.quantity, 0);
       },
       getTotalPrice: () => {
-        return get().items.reduce((total, item) => {
+        const items = get().items || [];
+        return items.reduce((total, item) => {
           const price = item.discountPrice || item.price;
           return total + price * item.quantity;
         }, 0);
