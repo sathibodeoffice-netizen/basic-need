@@ -5,6 +5,7 @@ export interface IProduct extends Document {
   banglaName?: string;
   description: string;
   images: string[];
+  videoUrl?: string;
   category: mongoose.Types.ObjectId;
   brand?: string;
   sku?: string;
@@ -24,6 +25,7 @@ const ProductSchema: Schema = new Schema(
     banglaName: { type: String },
     description: { type: String, required: true },
     images: [{ type: String }],
+    videoUrl: { type: String },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     brand: { type: String },
     sku: { type: String },

@@ -19,6 +19,12 @@ export default function ProductsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
 
+  // File states
+  const [images, setImages] = useState<string[]>([]);
+  const [videoUrl, setVideoUrl] = useState<string>('');
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
@@ -50,6 +56,47 @@ export default function ProductsPage() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
+      let uploadedImageUrls = [...images];
+      let uploadedVideoUrl = videoUrl;
+
+      // Upload images
+      if (imageFiles.length > 0) {
+        const formData = new FormData();
+        imageFiles.forEach(file => formData.append('files', file));
+        
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          uploadedImageUrls = [...uploadedImageUrls, ...data.urls];
+        } else {
+          const error = await res.json();
+          throw new Error(error.message || 'Failed to upload images');
+        }
+      }
+
+      // Upload video
+      if (videoFile) {
+        const formData = new FormData();
+        formData.append('files', videoFile);
+        
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          uploadedVideoUrl = data.urls[0];
+        } else {
+          const error = await res.json();
+          throw new Error(error.message || 'Failed to upload video');
+        }
+      }
+
       const url = editId ? `/api/products/${editId}` : '/api/products';
       const method = editId ? 'PUT' : 'POST';
       
@@ -61,7 +108,9 @@ export default function ProductsPage() {
           price: Number(price), 
           category,
           description: description || 'No description provided.',
-          stockQuantity: Number(stockQuantity) || 0
+          stockQuantity: Number(stockQuantity) || 0,
+          images: uploadedImageUrls,
+          videoUrl: uploadedVideoUrl
         }),
       });
 
@@ -71,6 +120,10 @@ export default function ProductsPage() {
         setCategory('');
         setDescription('');
         setStockQuantity('100');
+        setImages([]);
+        setVideoUrl('');
+        setImageFiles([]);
+        setVideoFile(null);
         setEditId(null);
         fetchProducts();
       } else {
@@ -91,6 +144,10 @@ export default function ProductsPage() {
     setCategory(product.category?._id || product.category || '');
     setDescription(product.description || '');
     setStockQuantity(product.stockQuantity?.toString() || '100');
+    setImages(product.images || []);
+    setVideoUrl(product.videoUrl || '');
+    setImageFiles([]);
+    setVideoFile(null);
     
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -130,6 +187,10 @@ export default function ProductsPage() {
                 setCategory('');
                 setDescription('');
                 setStockQuantity('100');
+                setImages([]);
+                setVideoUrl('');
+                setImageFiles([]);
+                setVideoFile(null);
               }}>
                 Cancel Edit
               </Button>
@@ -170,6 +231,40 @@ export default function ProductsPage() {
               value={stockQuantity}
               onChange={(e) => setStockQuantity(e.target.value)}
             />
+            <div className="w-full">
+              <label className="block text-sm font-medium text-text-main mb-1">Images</label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => {
+                  if (e.target.files) {
+                    setImageFiles(Array.from(e.target.files));
+                  }
+                }}
+                className="flex w-full rounded-md border border-border bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
+              {images.length > 0 && <p className="text-xs text-text-light mt-1">{images.length} existing image(s)</p>}
+              {imageFiles.length > 0 && <p className="text-xs text-text-light mt-1">{imageFiles.length} new image(s) selected</p>}
+            </div>
+            
+            <div className="w-full">
+              <label className="block text-sm font-medium text-text-main mb-1">Video</label>
+              <input
+                type="file"
+                accept="video/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    setVideoFile(e.target.files[0]);
+                  } else {
+                    setVideoFile(null);
+                  }
+                }}
+                className="flex w-full rounded-md border border-border bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
+              {videoUrl && <p className="text-xs text-text-light mt-1">Existing video: {videoUrl.split('/').pop()}</p>}
+              {videoFile && <p className="text-xs text-text-light mt-1">New video selected: {videoFile.name}</p>}
+            </div>
             <div className="w-full">
               <label className="block text-sm font-medium text-text-main mb-1">Description</label>
               <textarea
