@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ShoppingCart, Heart, User, Search, Menu, Moon, Sun } from 'lucide-react';
+import { ShoppingCart, Heart, User, Search, Menu, Moon, Sun, X } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Input from './ui/Input';
 import { useCartStore } from '@/store/useCartStore';
@@ -14,6 +14,7 @@ export default function Navbar() {
   const [theme, setTheme] = useState('light');
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,12 +144,84 @@ export default function Navbar() {
             </div>
 
             {/* Mobile menu button */}
-            <button className="md:hidden text-text-light hover:text-primary">
-              <Menu className="w-6 h-6" />
+            <button 
+              className="md:hidden text-text-light hover:text-primary"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t border-border bg-surface px-4 py-4 space-y-4">
+          <form 
+            onSubmit={(e) => { 
+              handleSearch(e); 
+              setIsMobileMenuOpen(false); 
+            }} 
+            className="relative"
+          >
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search for groceries, essentials..."
+              className="w-full h-10 pl-4 pr-10 rounded-full border border-border bg-background text-text-main focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder-text-light"
+            />
+            <button type="submit" className="absolute right-3 top-2.5 text-text-light hover:text-primary">
+              <Search className="w-5 h-5" />
+            </button>
+          </form>
+          
+          <div className="flex flex-col space-y-3 pt-2">
+            <Link 
+              href="/" 
+              className="text-text-main font-medium hover:text-primary py-2 border-b border-border" 
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link 
+              href="/shop" 
+              className="text-text-main font-medium hover:text-primary py-2 border-b border-border" 
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Shop
+            </Link>
+            <Link 
+              href="/wishlist" 
+              className="text-text-main font-medium hover:text-primary py-2 border-b border-border flex items-center gap-2" 
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <Heart className="w-5 h-5" />
+              Wishlist
+            </Link>
+            {session ? (
+              <Link 
+                href={session.user.role === 'ADMIN' ? '/admin' : '/dashboard'} 
+                className="text-text-main font-medium hover:text-primary py-2 flex items-center gap-2" 
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <User className="w-5 h-5" />
+                Account
+              </Link>
+            ) : (
+              <Link 
+                href="/login" 
+                className="text-text-main font-medium hover:text-primary py-2 flex items-center gap-2" 
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <User className="w-5 h-5" />
+                Login
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }
