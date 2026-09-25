@@ -14,7 +14,6 @@ export default function ProductsPage() {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
-  const [vendor, setVendor] = useState('Other');
   const [description, setDescription] = useState('');
   const [stockQuantity, setStockQuantity] = useState('100');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -108,7 +107,6 @@ export default function ProductsPage() {
           name, 
           price: Number(price), 
           category,
-          vendor,
           description: description || 'No description provided.',
           stockQuantity: Number(stockQuantity) || 0,
           images: uploadedImageUrls,
@@ -120,7 +118,6 @@ export default function ProductsPage() {
         setName('');
         setPrice('');
         setCategory('');
-        setVendor('Other');
         setDescription('');
         setStockQuantity('100');
         setImages([]);
@@ -145,7 +142,6 @@ export default function ProductsPage() {
     setName(product.name);
     setPrice(product.price.toString());
     setCategory(product.category?._id || product.category || '');
-    setVendor(product.vendor || 'Other');
     setDescription(product.description || '');
     setStockQuantity(product.stockQuantity?.toString() || '100');
     setImages(product.images || []);
@@ -189,7 +185,6 @@ export default function ProductsPage() {
                 setName('');
                 setPrice('');
                 setCategory('');
-                setVendor('Other');
                 setDescription('');
                 setStockQuantity('100');
                 setImages([]);
@@ -220,19 +215,6 @@ export default function ProductsPage() {
                 {categories.map((cat) => (
                   <option key={cat._id} value={cat._id}>{cat.name}</option>
                 ))}
-              </select>
-            </div>
-            <div className="w-full">
-              <label className="block text-sm font-medium text-text-main mb-1">Vendor</label>
-              <select
-                className="flex h-10 w-full rounded-md border border-border bg-surface px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                required
-                value={vendor}
-                onChange={(e) => setVendor(e.target.value)}
-              >
-                <option value="Meena Bazar">Meena Bazar</option>
-                <option value="RFL Best Buy">RFL Best Buy</option>
-                <option value="Other">Other</option>
               </select>
             </div>
             <Input
@@ -311,7 +293,6 @@ export default function ProductsPage() {
                   <tr className="border-b border-border">
                     <th className="py-3 px-4 font-semibold text-text-light">Name</th>
                     <th className="py-3 px-4 font-semibold text-text-light">Category</th>
-                    <th className="py-3 px-4 font-semibold text-text-light">Vendor</th>
                     <th className="py-3 px-4 font-semibold text-text-light">Price</th>
                     <th className="py-3 px-4 font-semibold text-text-light">Stock</th>
                     <th className="py-3 px-4 font-semibold text-text-light text-right">Actions</th>
@@ -322,11 +303,6 @@ export default function ProductsPage() {
                     <tr key={product._id} className="border-b border-border hover:bg-black/5 dark:hover:bg-white/5">
                       <td className="py-3 px-4">{product.name}</td>
                       <td className="py-3 px-4">{product.category?.name || '-'}</td>
-                      <td className="py-3 px-4">
-                        <span className={`px-2 py-1 rounded text-xs ${product.vendor === 'Meena Bazar' ? 'bg-orange-100 text-orange-800' : product.vendor === 'RFL Best Buy' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}`}>
-                          {product.vendor || 'Other'}
-                        </span>
-                      </td>
                       <td className="py-3 px-4">৳{product.price}</td>
                       <td className="py-3 px-4">{product.stockQuantity}</td>
                       <td className="py-3 px-4 text-right">
