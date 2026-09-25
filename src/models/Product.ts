@@ -15,6 +15,7 @@ export interface IProduct extends Document {
   unit: string; // e.g., 'kg', 'pcs', 'liters'
   isAvailable: boolean;
   isFeatured: boolean;
+  vendor: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,6 +36,11 @@ const ProductSchema: Schema = new Schema(
     unit: { type: String, required: true, default: 'pcs' },
     isAvailable: { type: Boolean, default: true },
     isFeatured: { type: Boolean, default: false },
+    vendor: { 
+      type: String, 
+      enum: ['Meena Bazar', 'RFL Best Buy', 'Other'], 
+      default: 'Other' 
+    },
   },
   {
     timestamps: true,

@@ -8,6 +8,7 @@ export interface IOrder extends Document {
     image: string;
     price: number;
     product: mongoose.Types.ObjectId;
+    vendor?: string;
   }>;
   shippingAddress: {
     fullName: string;
@@ -46,6 +47,7 @@ const OrderSchema: Schema = new Schema(
         image: { type: String },
         price: { type: Number, required: true },
         product: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Product' },
+        vendor: { type: String },
       },
     ],
     shippingAddress: {

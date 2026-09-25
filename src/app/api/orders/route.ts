@@ -26,12 +26,24 @@ export async function POST(req: Request) {
     }
 
     await connectToDatabase();
+
+    // Fetch products to get the current vendor for each item
+    const Product = (await import('@/models/Product')).default;
+    const enrichedOrderItems = await Promise.all(
+      orderItems.map(async (item: any) => {
+        const product = await Product.findById(item.product);
+        return {
+          ...item,
+          vendor: product?.vendor || 'Other'
+        };
+      })
+    );
     
     // Manual payment validation
     const isPaid = false; // Manual payments need admin verification
     
     const order = new Order({
-      orderItems,
+      orderItems: enrichedOrderItems,
       user: session.user.id,
       shippingAddress,
       paymentMethod,
