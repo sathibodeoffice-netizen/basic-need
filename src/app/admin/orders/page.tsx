@@ -6,10 +6,13 @@ import Button from '@/components/ui/Button';
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
+  const [vendorSales, setVendorSales] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isVendorLoading, setIsVendorLoading] = useState(true);
 
   useEffect(() => {
     fetchOrders();
+    fetchVendorSales();
   }, []);
 
   const fetchOrders = async () => {
@@ -21,6 +24,20 @@ export default function AdminOrdersPage() {
       console.error('Error fetching orders:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchVendorSales = async () => {
+    try {
+      const res = await fetch('/api/admin/vendor-sales');
+      if (res.ok) {
+        const data = await res.json();
+        setVendorSales(data);
+      }
+    } catch (error) {
+      console.error('Error fetching vendor sales:', error);
+    } finally {
+      setIsVendorLoading(false);
     }
   };
 
@@ -41,11 +58,47 @@ export default function AdminOrdersPage() {
     }
   };
 
+  const getVendorColor = (vendorName: string) => {
+    if (vendorName === 'Meena Bazar') return 'bg-orange-100 text-orange-800 border-orange-200';
+    if (vendorName === 'RFL Best Buy') return 'bg-red-100 text-red-800 border-red-200';
+    return 'bg-gray-100 text-gray-800 border-gray-200';
+  };
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-text-main mb-6">Order Management</h1>
 
+      {/* Vendor Sales Summary */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold text-text-main mb-4">Vendor Sales Summary</h2>
+        {isVendorLoading ? (
+          <div className="flex justify-center p-8 bg-surface rounded-lg border border-border shadow-sm">
+            <Loader2 className="animate-spin text-primary w-8 h-8" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {vendorSales.map((vs) => (
+              <div key={vs.vendor} className={`p-6 rounded-lg border shadow-sm ${getVendorColor(vs.vendor)}`}>
+                <p className="text-sm font-semibold mb-1 uppercase tracking-wider">{vs.vendor || 'Unknown Vendor'}</p>
+                <div className="mt-2 flex justify-between items-end">
+                  <div>
+                    <p className="text-3xl font-bold">৳{vs.totalRevenue.toLocaleString()}</p>
+                    <p className="text-sm mt-1 font-medium">{vs.totalQuantity} Pieces Sold</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {vendorSales.length === 0 && (
+              <div className="col-span-3 p-6 text-center text-text-light bg-surface rounded-lg border border-border shadow-sm">
+                No vendor sales data available.
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       <div className="bg-surface p-6 rounded-lg border border-border shadow-sm">
+        <h2 className="text-lg font-semibold text-text-main mb-4">All Orders</h2>
         {isLoading ? (
           <div className="flex justify-center p-8">
             <Loader2 className="animate-spin text-primary w-8 h-8" />
@@ -83,7 +136,7 @@ export default function AdminOrdersPage() {
                     </td>
                     <td className="py-3 px-4 text-right">
                       <select 
-                        className="text-sm border border-border rounded p-1"
+                        className="text-sm border border-border rounded p-1 bg-surface text-text-main focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         value={order.status}
                         onChange={(e) => updateStatus(order._id, e.target.value)}
                       >
